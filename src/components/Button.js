@@ -23,11 +23,12 @@ const ButtonLink = styles.button`
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 15px;
 `
 
 export default function Button(props){
     return(    
-        <ButtonLink as={Link} to={props.to} onClick={props.onClick} textcolor={props.textcolor} color={props.color}>
+        <ButtonLink onClick={props.onClick} textcolor={props.textcolor} color={props.color}>
             {props.children}
         </ButtonLink>       
     )

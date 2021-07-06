@@ -26,7 +26,7 @@ export default function Signin(){
         <br></br>
         <Label label="Telefone"></Label>
         <br></br>
-        <Label label="Senha"></Label>
+        <Label type="password" label="Senha"></Label>
 
         <br></br><br></br>
         <Button color='#f7d0b7' textcolor='#222222'>Cadastrar </Button>
