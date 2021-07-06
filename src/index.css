@@ -1,0 +1,21 @@
+@font-face {
+  font-family: Playlist;
+  src: url(./assets/fonts/Playlist\ Script.otf);
+  font-style: normal;
+  font-weight: 100;
+}
+
+:root{
+  --primary:#f7d0b7;
+  --pink: #e87b63;
+  --darkgrey: #545454;
+  --lightgrey: #E6E6E6;
+  --black:#000000;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
