@@ -31,3 +31,8 @@ export function logout(history = false) {
 export function isLogged() {
     return typeof localStorage.auth_token === 'string' && localStorage.auth_token.length > 80
 }
+
+export function getUsers(){
+    const {data} = server.get('/users')
+    return data
+}

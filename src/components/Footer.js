@@ -4,6 +4,7 @@ import styles from 'styled-components'
 import img from '../assets/images/footerMobile.svg'
 
 const Img = styles.img`
+    pointer-events: none;
     width: 100%;
     position: fixed;
     bottom: 0;

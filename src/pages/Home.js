@@ -8,10 +8,8 @@ import Footer from '../components/Footer'
 import Title from '../components/Title'
 import Label from '../components/Label'
 import Text from '../components/Text'
-import StatusBox from '../components/StatusBox'
 
-import {isLogged, login} from '../api/userController'
-
+import { server } from '../api/index'
 
 const Div = styles.div`
   align-items: center;   
@@ -23,34 +21,37 @@ class Home extends Component{
   constructor(props){
     super(props)
 
-    this.inicial_state = {
-      phone: '',
-      password: '',
-      loading: false,
-      success: false,
-      err: false,
+    this.state = {
+      phone: "",
+      password: "",
+      users: []
     }
-    this.state = { ...this.initial_state }
+
   }
-  
+
   componentDidMount(){
-    if (isLogged())
-      this.props.history.push('/')
+    server.get('/users')
+      .then(res=>{
+        this.setState({users: res.data})
+      })
   }
 
   async submit(){
-    this.setState({ loading: true, err: false, success: false })
-    let {err} = await login({...this.state})
-    if (!err)
-      this.props.history.push('/homePack')
-    else
-      this.setState({ loading: false, err, success: !err })
+    server.put('/login')
   }
+
 
   render(){
     return(
       <div>
-        <Div>          
+        <Div>      
+
+          <div>
+            {this.state.users.map(
+              user=><div key={user.phone}>{user.name}</div>
+            )}
+          </div>    
+
           <Title>Unhas Feitas</Title>
 
           <Label label="Telefone"></Label>
@@ -58,15 +59,13 @@ class Home extends Component{
           <Label type="password" label="Senha"/>
 
           <br></br><br></br>
-          <Button onClick={()=>console.log("pinto")} color='#f7d0b7' textcolor='#222222'>Login</Button>
-          <button onClick={()=>console.log("pinto")}>Login</button>
+          <Button onClick={()=>this.submit()} color='#f7d0b7' textcolor='#222222'>Login</Button>
           <br></br>
 
           <Text textcolor='#545454'>Ainda não tem cadastro?</Text>
           <ButtonText textcolor='#e87b63' as={Link} to='/signin'>SignUp</ButtonText>
-
           <br></br>
-          <StatusBox err={this.state.err} success={this.state.success} />
+
         </Div>      
         <Footer/>
       </div>
