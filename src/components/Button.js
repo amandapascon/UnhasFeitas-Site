@@ -1,6 +1,5 @@
 import React from 'react'
 import styles from 'styled-components'
-import { Link } from 'react-router-dom'
 
 const ButtonLink = styles.button`
     background: ${props => props.color};

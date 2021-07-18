@@ -28,7 +28,7 @@ const TextFieldGray = withStyles({
 export default function Label(props) {
     return(   
       <>
-      {props.type === "password" ? <TextFieldGray type="password" id={props.id} label={props.label}></TextFieldGray> : <TextFieldGray  id={props.id} label={props.label}></TextFieldGray>}        
+      {props.type === "password" ? <TextFieldGray type="password" onChange={props.onChange} id={props.id} label={props.label}></TextFieldGray> : <TextFieldGray onChange={props.onChange} id={props.id} label={props.label}></TextFieldGray>}        
       </>
         
     )

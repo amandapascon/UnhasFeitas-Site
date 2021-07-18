@@ -22,44 +22,61 @@ class Home extends Component{
     super(props)
 
     this.state = {
-      phone: "",
-      password: "",
-      users: []
+      phone: '',
+      password: '',
+      users: [],
+      token: '',
+      err: false,
     }
-
   }
 
-  componentDidMount(){
+  /* componentDidMount(){
     server.get('/users')
       .then(res=>{
         this.setState({users: res.data})
       })
-  }
+      .catch((err) => {
+        console.error(err);
+      })
+  } */
 
-  async submit(){
-    server.put('/login')
-  }
+  async onSubmit(){
+    console.log(this.state.phone)
+    console.log(this.state.password)
 
+    server.put('/login', {phone: this.state.phone, password: this.state.password})
+      .then(res=>{
+        this.setState({token: res.data.token})
+      })
+      .catch((err) => {
+        this.setState({err: true})
+        console.error(err);
+      })
+    
+    console.log(this.state.token)
+  }
 
   render(){
     return(
       <div>
         <Div>      
 
-          <div>
+          {/* <div>
             {this.state.users.map(
               user=><div key={user.phone}>{user.name}</div>
             )}
-          </div>    
+          </div>   */}  
 
           <Title>Unhas Feitas</Title>
 
-          <Label label="Telefone"></Label>
+          {this.state.err && <Text textcolor='#f00'>Telefone ou Usuário incorretos!</Text>}
+
+          <Label label="Telefone" onChange={(e) => this.setState({ phone: e.target.value })}/>
           <br></br>
-          <Label type="password" label="Senha"/>
+          <Label type="password" label="Senha" onChange={(e) => this.setState({ password: e.target.value })}/>
 
           <br></br><br></br>
-          <Button onClick={()=>this.submit()} color='#f7d0b7' textcolor='#222222'>Login</Button>
+          <Button onClick={()=>this.onSubmit()} color='#f7d0b7' textcolor='#222222'>Login</Button>
           <br></br>
 
           <Text textcolor='#545454'>Ainda não tem cadastro?</Text>
