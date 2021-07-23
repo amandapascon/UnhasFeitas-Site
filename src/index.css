@@ -5,12 +5,21 @@
   font-weight: 100;
 }
 
+@font-face {
+  font-family: TextMeOne;
+  src: url(./assets/fonts/TextMeOne-Regular.ttf);
+  font-style: normal;
+  font-weight: 100;
+}
+
+
 :root{
   --primary:#f7d0b7;
   --pink: #e87b63;
   --darkgrey: #545454;
   --lightgrey: #E6E6E6;
   --black:#000000;
+  --white: #fff;
 }
 
 html,

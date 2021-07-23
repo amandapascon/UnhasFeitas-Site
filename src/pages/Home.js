@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React, { Component, useContext } from 'react'
 import { Link } from 'react-router-dom'
 import styles from 'styled-components'
 
+//componentes
 import Button from '../components/Button'
 import ButtonText from '../components/ButtonText'
 import Footer from '../components/Footer'
@@ -9,7 +10,9 @@ import Title from '../components/Title'
 import Label from '../components/Label'
 import Text from '../components/Text'
 
+//servidor
 import { server } from '../api/index'
+
 
 const Div = styles.div`
   align-items: center;   
@@ -47,13 +50,12 @@ class Home extends Component{
     server.put('/login', {phone: this.state.phone, password: this.state.password})
       .then(res=>{
         this.setState({token: res.data.token})
+        console.log(res.data.token)
       })
       .catch((err) => {
         this.setState({err: true})
         console.error(err);
       })
-    
-    console.log(this.state.token)
   }
 
   render(){
