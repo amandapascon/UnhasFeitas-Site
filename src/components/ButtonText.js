@@ -17,8 +17,6 @@ const ButtonLink = styles.button`
     font-family: 'Text Me One', sans-serif;
     outline: none;    
 
-    margin-top: 10px;
-
     display: flex;
     justify-content: center;
     align-items: center;

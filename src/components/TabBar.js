@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styles from 'styled-components'
 
+import Button from './ButtonText'
 import { Link } from 'react-router-dom'
+import { Context } from '../context/AuthContext'
 
-import PersonIcon from '@material-ui/icons/Person';
-import HistoryIcon from '@material-ui/icons/History';
-import TodayIcon from '@material-ui/icons/Today';
-import HomeIcon from '@material-ui/icons/Home';
+import PersonIcon from '@material-ui/icons/Person'
+import HistoryIcon from '@material-ui/icons/History'
+import TodayIcon from '@material-ui/icons/Today'
+import HomeIcon from '@material-ui/icons/Home'
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
 const Tabbar = styles.div`
     background-color : var(--white);
@@ -39,12 +42,14 @@ const Icone = styles.div`
 `
 
 export default function TabBar(){
+    const { handleLogout } = useContext(Context);
     return(
         <Tabbar>
-            <Icone><HomeIcon/>Home</Icone>
-            <Icone><TodayIcon/>Agendamento</Icone>
-            <Icone><HistoryIcon/>Histórico</Icone>
-            <Icone><PersonIcon/>Perfil</Icone>
+            <Button textcolor='#000' as={Link} to='/homePack'><Icone><HomeIcon/>Home</Icone></Button>
+            <Button textcolor='#000' as={Link} to='/scheduling'><Icone><TodayIcon/>Agendar</Icone></Button>
+            <Button textcolor='#000' as={Link} to='/historic'><Icone><HistoryIcon/>Histórico</Icone></Button>
+            <Button textcolor='#000' as={Link} to='/myaccount'><Icone><PersonIcon/>Perfil</Icone></Button>
+            <Button textcolor='#000' onClick={handleLogout}><Icone><ExitToAppIcon/>Sair</Icone></Button>
         </Tabbar>
     )
 }

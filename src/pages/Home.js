@@ -1,6 +1,8 @@
-import React, { Component, useContext } from 'react'
+import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
 import styles from 'styled-components'
+import { Context } from '../context/AuthContext';
+import history from '../history';
 
 //componentes
 import Button from '../components/Button'
@@ -10,88 +12,50 @@ import Title from '../components/Title'
 import Label from '../components/Label'
 import Text from '../components/Text'
 
-//servidor
-import { server } from '../api/index'
-
-
 const Div = styles.div`
   align-items: center;   
   display: flex;
   flex-direction: column;
 `
 
-class Home extends Component{
-  constructor(props){
-    super(props)
+export default function Home() {
+  const { handleLogin, authenticated} = useContext(Context);
 
-    this.state = {
-      phone: '',
-      password: '',
-      users: [],
-      token: '',
-      err: false,
+  const [ phone, setPhone ] = useState('')
+  const [ password, setPassword ] = useState('')
+  const [ err, setErr ] = useState('')
+
+  async function handlelogin() {
+    await handleLogin(phone, password)
+  }
+
+  useEffect(() => {
+    if(authenticated){
+        history.push('/homePack');
     }
-  }
+        
+  }, []);
 
-  /* componentDidMount(){
-    server.get('/users')
-      .then(res=>{
-        this.setState({users: res.data})
-      })
-      .catch((err) => {
-        console.error(err);
-      })
-  } */
-
-  async onSubmit(){
-    console.log(this.state.phone)
-    console.log(this.state.password)
-
-    server.put('/login', {phone: this.state.phone, password: this.state.password})
-      .then(res=>{
-        this.setState({token: res.data.token})
-        console.log(res.data.token)
-      })
-      .catch((err) => {
-        this.setState({err: true})
-        console.error(err);
-      })
-  }
-
-  render(){
-    return(
-      <div>
+  return(
+    <div>
         <Div>      
+        <Title>Unhas Feitas</Title>
 
-          {/* <div>
-            {this.state.users.map(
-              user=><div key={user.phone}>{user.name}</div>
-            )}
-          </div>   */}  
+        {err && <Text textcolor='#f00'>Telefone ou Usuário incorretos!</Text>}
 
-          <Title>Unhas Feitas</Title>
+        <Label label="Telefone" value={phone} onChange={ event => setPhone(event.target.value) }/>
+        <br></br>
+        <Label label="Senha" value={password} onChange={ event => setPassword(event.target.value)} type="password" />
 
-          {this.state.err && <Text textcolor='#f00'>Telefone ou Usuário incorretos!</Text>}
+        <br></br><br></br>
+        <Button onClick={()=>handlelogin()} color='#f7d0b7' textcolor='#222222'>Login</Button>
+        <br></br>
 
-          <Label label="Telefone" onChange={(e) => this.setState({ phone: e.target.value })}/>
-          <br></br>
-          <Label type="password" label="Senha" onChange={(e) => this.setState({ password: e.target.value })}/>
-
-          <br></br><br></br>
-          <Button onClick={()=>this.onSubmit()} color='#f7d0b7' textcolor='#222222'>Login</Button>
-          <br></br>
-
-          <Text textcolor='#545454'>Ainda não tem cadastro?</Text>
-          <ButtonText textcolor='#e87b63' as={Link} to='/signin'>SignUp</ButtonText>
-          <br></br>
-
+        <Text textcolor='#545454'>Ainda não tem cadastro?</Text>
+        <ButtonText textcolor='#e87b63' as={Link} to='/signin'>SignUp</ButtonText>
+        <br></br>
         </Div>      
         <Footer/>
-      </div>
-    )
-  }
-
+  </div>
+  )
 }
-
-export default Home
-

@@ -7,10 +7,10 @@ import Text from './components/Text'
 
 //importando os componentes
 import Home from './pages/Home'
-import Home2 from './pages/Home2';
 import Signin from './pages/Signin'
 import HomePack from './pages/Homepack'
 import Scheduling from './pages/Scheduling'
+import MyAccount from './pages/MyAccount'
 /* import Historic from './pages/Historic'
 import HomeADM from './pages/HomeADM'
 import Checkin from './pages/Checkin'
@@ -34,10 +34,12 @@ function CustomRoute({ isPrivate, ...rest }) {
 export default function Routes() {
   return (
     <Switch>
-      <CustomRoute component={Home2} path='/' exact/>
+      <CustomRoute component={Home} path='/' exact/>
       <CustomRoute component={Signin} path='/signin' exac/>
       <CustomRoute isPrivate component={HomePack} path='/homePack' exact />
       <CustomRoute isPrivate component={Scheduling} path='/scheduling' />
+      <CustomRoute isPrivate component={MyAccount} path='/myaccount' exact />
     </Switch>
   );
 }
+
