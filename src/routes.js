@@ -11,6 +11,7 @@ import Signin from './pages/Signin'
 import HomePack from './pages/Homepack'
 import Scheduling from './pages/Scheduling'
 import MyAccount from './pages/MyAccount'
+import Historic from './pages/Historic';
 /* import Historic from './pages/Historic'
 import HomeADM from './pages/HomeADM'
 import Checkin from './pages/Checkin'
@@ -39,6 +40,7 @@ export default function Routes() {
       <CustomRoute isPrivate component={HomePack} path='/homePack' exact />
       <CustomRoute isPrivate component={Scheduling} path='/scheduling' />
       <CustomRoute isPrivate component={MyAccount} path='/myaccount' exact />
+      <CustomRoute isPrivate component={Historic} path='/historic' exact />
     </Switch>
   );
 }

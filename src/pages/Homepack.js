@@ -3,6 +3,7 @@ import styles from 'styled-components'
 
 import Header from '../components/Header'
 import Circle from '../components/Circle';
+import TextBold from '../components/TextBold';
 import Text from '../components/Text';
 import Button from '../components/Button'
 import ButtonText from '../components/ButtonText';

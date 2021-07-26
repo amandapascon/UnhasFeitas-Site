@@ -5,7 +5,6 @@ const P = styles.p`
     font-size: 15px;
     font-family: 'Text Me One', sans-serif;
     color: ${(props) => props.textcolor};
-    margin-bottom: 0;
 `
 
 export default function Text(props){

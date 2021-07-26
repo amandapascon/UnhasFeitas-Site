@@ -1,8 +1,10 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom'
+import { Context } from '../context/AuthContext'
 import styles from 'styled-components'
-import { Context } from '../context/AuthContext';
-import history from '../history';
+import history from '../history'
+import MuiAlert from '@material-ui/lab/Alert'
+import Snackbar from '@material-ui/core/Snackbar'
 
 //componentes
 import Button from '../components/Button'
@@ -23,10 +25,19 @@ export default function Home() {
 
   const [ phone, setPhone ] = useState('')
   const [ password, setPassword ] = useState('')
-  const [ err, setErr ] = useState('')
+  const [ err, setErr ] = useState(false)
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const handleClose = (event) => {
+    setErr(false);
+  };
 
   async function handlelogin() {
-    await handleLogin(phone, password)
+    if (await handleLogin(phone, password))
+      setErr(true);
   }
 
   useEffect(() => {
@@ -41,18 +52,24 @@ export default function Home() {
         <Div>      
         <Title>Unhas Feitas</Title>
 
-        {err && <Text textcolor='#f00'>Telefone ou Usuário incorretos!</Text>}
-
         <Label label="Telefone" value={phone} onChange={ event => setPhone(event.target.value) }/>
         <br></br>
         <Label label="Senha" value={password} onChange={ event => setPassword(event.target.value)} type="password" />
 
         <br></br><br></br>
-        <Button onClick={()=>handlelogin()} color='#f7d0b7' textcolor='#222222'>Login</Button>
+        <Button onClick={()=>handlelogin()} color='#f7d0b7' textcolor='#222222'>Entrar</Button>
         <br></br>
 
-        <Text textcolor='#545454'>Ainda não tem cadastro?</Text>
-        <ButtonText textcolor='#e87b63' as={Link} to='/signin'>SignUp</ButtonText>
+        <Text textcolor='#545454'>Ainda não tem cadastro?<ButtonText textcolor='#e87b63' as={Link} to='/signin'>Cadastrar-se</ButtonText></Text>
+
+        {err &&
+          <Snackbar open={err} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="error">
+              Telefone e/ou Senha incorretos!
+            </Alert>
+          </Snackbar>
+        }
+        
         <br></br>
         </Div>      
         <Footer/>

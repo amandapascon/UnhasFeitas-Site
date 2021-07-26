@@ -3,8 +3,8 @@ import styles from 'styled-components'
 
 const Circulo = styles.div`
     border-radius: 50%;
-    height: 200px;
-    width: 200px;
+    height: 180px;
+    width: 180px;
     border: 2px solid #000000;
 
     font-size: 60px;

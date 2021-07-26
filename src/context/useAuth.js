@@ -23,18 +23,6 @@ export default function useAuth() {
     setLoading(false);
   }, []);  
 
-  async function handleLogin(phone, password) {
-    try{
-      const { data: { token } } = await server.put('/login', {phone: phone, password: password})
-      localStorage.setItem('token', JSON.stringify(token));
-      server.defaults.headers.Authorization = `Bearer ${token}`;
-      setAuthenticated(true);
-      history.push('/homePack');
-    }catch{
-      console.log("erro")
-    }
-  }
-
   async function handleSignin(name, phone, password) {
     try{
       server.post('/user', {name: name, phone: phone, password: password})
@@ -43,10 +31,22 @@ export default function useAuth() {
       })
       .catch((err) => {
         if(err)
-          console.log("erro")
+          return true
       })
     }catch{
-      console.log("erro")
+      return true
+    }
+  }
+
+  async function handleLogin(phone, password) {
+    try{
+      const { data: { token } } = await server.put('/login', {phone: phone, password: password})
+      localStorage.setItem('token', JSON.stringify(token));
+      server.defaults.headers.Authorization = `Bearer ${token}`;
+      setAuthenticated(true);
+      history.push('/homePack');
+    }catch{
+      return true
     }
   }
 

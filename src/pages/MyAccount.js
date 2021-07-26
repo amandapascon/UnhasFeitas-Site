@@ -1,20 +1,24 @@
 import React, { useContext, useState, useEffect } from 'react';
 import styles from 'styled-components'
 
+import EditIcon from '@material-ui/icons/Edit';
+
 import Header from '../components/Header'
-import TextBold from '../components/TextBold';
+import TextBold from '../components/TextBold'
 import Text from '../components/Text'
 import Button from '../components/Button'
-import TabBar from '../components/TabBar';
+import TabBar from '../components/TabBar'
+import Label from '../components/Label';
+import LabelReady from '../components/LabelReady'
 
-import { Context } from '../context/AuthContext';
-import { server } from '../api';
+import { Context } from '../context/AuthContext'
+import { server } from '../api'
 
 const Div = styles.div`
   align-items: center;   
   display: flex;
   flex-direction: column;
-  padding-top: 100px;
+  padding-top: 150px;
   justify-content: center;
 `
 
@@ -36,7 +40,8 @@ export default function MyAccount(){
             })
         }else{
             handleLogout() 
-        }        
+        }   
+        setLoading(false)     
     }, []);
 
     return(
@@ -45,8 +50,15 @@ export default function MyAccount(){
         <Div>                
             <TextBold>Meu Perfil</TextBold>
 
-            <Text>{name}</Text>
-            <Text>{phone}</Text>
+            <br></br><br></br><br></br><br></br>
+
+            {!loading && <LabelReady label="Telefone" value={phone} onChange={ event => setPhone(event.target.value) }/>}
+            <br></br>
+            {!loading && <LabelReady label="Nome" value={name} onChange={ event => setName(event.target.value) }/>}
+            
+            <br></br><br></br><br></br><br></br>
+            <Button color='#f7d0b7' textcolor='#222222'>Salvar Alterações</Button>
+            
 
         </Div>      
         <TabBar/>

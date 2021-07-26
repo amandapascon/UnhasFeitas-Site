@@ -6,7 +6,7 @@ const P = styles.p`
     font-weight: bold;
     font-family: 'Text Me One', sans-serif;
     color: ${(props) => props.textcolor};
-    margin-bottom: 0;
+    
 `
 
 export default function TextBold(props){
