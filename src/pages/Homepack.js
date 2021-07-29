@@ -1,5 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import styles from 'styled-components'
+import MuiAlert from '@material-ui/lab/Alert'
+import Snackbar from '@material-ui/core/Snackbar'
 
 import Header from '../components/Header'
 import Circle from '../components/Circle';
@@ -8,6 +10,7 @@ import Text from '../components/Text';
 import Button from '../components/Button'
 import ButtonText from '../components/ButtonText';
 import TabBar from '../components/TabBar';
+import SimpleDialog from '../components/SimpleDialog'
 
 import { Context } from '../context/AuthContext';
 import { server } from '../api';
@@ -41,6 +44,48 @@ export default function HomePack(){
   const [usage, setUsage] = useState(0)
   const [textbutton, setTextbutton] = useState("")
   const [text, setText] = useState("")
+
+  const [packs, setPacks] = useState("")
+
+  const [ err, setErr ] = useState(false)
+  const [ success, setSuccess ] = useState(false)
+
+  const [open, setOpen] = useState(false)
+  const [selectedValue, setSelectedValue] = useState("")
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (value) => {
+    setOpen(false);
+    setSelectedValue(value);
+  };
+
+  function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+  }
+
+  const handleCloseErr = (event) => {
+    setErr(false);
+  };
+
+  const handleCloseSucces = (event) => {
+    setSuccess(false);
+  };
+
+  async function handleNewPay(){
+    console.log(pack)
+    /* server
+    .post('/payment/package/${pack}')
+    .then((res)=> {
+      setSuccess(true);
+    })
+    .catch((err) => {
+      if(err)
+        setErr(true)
+    }) */
+  }
 
   useEffect(() => {
 
@@ -84,9 +129,21 @@ export default function HomePack(){
         if(err)
           handleLogout() 
       })
+
     }else{
       handleLogout() 
     }
+
+    if(selectedValue){
+      /* server
+        .get('/package')
+        .then((res)=> {
+          console.log(res.data)
+          setPacks(res.data)
+        }) */
+        console.log(selectedValue)
+    }
+
   }, []);
   
   return(
@@ -100,8 +157,27 @@ export default function HomePack(){
 
         {!loading && pack && <Circle>{usage}/6</Circle>}
         {!loading && pack && <Text>{text}</Text>}
-        {!loading && !pack && remaining!==-1 && <Button color='#f7d0b7' textcolor='#222222'>{textbutton}</Button>}
+        {!loading && !pack && remaining!==-1 && <Button color='#f7d0b7' textcolor='#222222' onClick={handleClickOpen}>{textbutton}</Button>}
         {!loading && !pack && remaining===-1 && <Button color='#f7d0b7' textcolor='#222222'>{textbutton}</Button>}
+
+        {success &&
+          <Snackbar open={success} autoHideDuration={6000} onClose={handleCloseSucces}>
+            <Alert onClose={handleCloseSucces} severity="success">
+              Pagamento solicitado com sucesso!
+            </Alert>
+          </Snackbar>
+        }
+
+        {err &&
+          <Snackbar open={err} autoHideDuration={6000} onClose={handleCloseErr}>
+            <Alert onClose={handleCloseErr} severity="error">
+              Erro ao solicitar novo pagamento!
+            </Alert>
+          </Snackbar>
+        }
+    
+      <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
+    
       </Div>      
       <TabBar/>
     </div>
