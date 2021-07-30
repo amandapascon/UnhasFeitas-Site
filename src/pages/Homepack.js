@@ -40,12 +40,11 @@ export default function HomePack(){
   const [name, setName] = useState("")
   const [pack, setPack] = useState("")
   const [remaining, setRemaining] = useState("")
+  const [statusUser, setStatusUser] = useState("")
 
   const [usage, setUsage] = useState(0)
   const [textbutton, setTextbutton] = useState("")
   const [text, setText] = useState("")
-
-  const [packs, setPacks] = useState("")
 
   const [ err, setErr ] = useState(false)
   const [ success, setSuccess ] = useState(false)
@@ -99,24 +98,30 @@ export default function HomePack(){
         setName(res.data.name)
         setPack(res.data.pack)
         setRemaining(res.data.remainingPack)
+        setStatusUser(res.data.status)
         
          //tela 1 - primeira vez
-        if(res.data.pack === null & res.data.remainingPack !== -1){
+        if(res.data.status === "unused"){
           setTextbutton("Iniciar novo pacote")
           setUsage(null)
         }
 
         //tela 2 - check payment
+        if(res.data.status === "requested"){
+          setText("AGUARDANDO CONFIRMAÇÃO DE PAGAMENTO")
+          setTextbutton("Cancelar solicitação")
+          setUsage(null)
+        }
 
         //tela 3 - pacote ativo
-        if(res.data.pack !== null & res.data.remainingPack !== -1){
+        if(res.data.status === "using"){
           setText("PACOTE ATIVO")
           setTextbutton(null)
           setUsage(6-res.data.remainingPack)
         }
 
         //tela 4 - pacote finalizado
-        if(res.data.pack !== null & res.data.remainingPack === -1){
+        if(res.data.status === "finished"){
           setText("PACOTE FINALIZADO")
           setTextbutton("Iniciar novo pacote")
           setUsage(6)
@@ -155,11 +160,12 @@ export default function HomePack(){
         {!loading && <Text>Seja Bem-Vinda(o), {name}</Text>}
         <br></br><br></br><br></br><br></br><br></br>
 
-        {!loading && pack && <Circle>{usage}/6</Circle>}
-        {!loading && pack && <Text>{text}</Text>}
-        {!loading && !pack && remaining!==-1 && <Button color='#f7d0b7' textcolor='#222222' onClick={handleClickOpen}>{textbutton}</Button>}
-        {!loading && !pack && remaining===-1 && <Button color='#f7d0b7' textcolor='#222222'>{textbutton}</Button>}
-
+        {!loading && (statusUser==="using" || statusUser==="finished") && <Circle>{usage}/6</Circle>}
+        {!loading && (statusUser==="requested" || statusUser==="using" || statusUser==="finished") && <Text>{text}</Text>}
+        
+        {!loading && (statusUser==="unused" || statusUser==="finished") && <Button color='#f7d0b7' textcolor='#222222' onClick={handleClickOpen}>{textbutton}</Button>}
+        {!loading && statusUser==="requested" && <Button color='#f7d0b7' textcolor='#222222' >{textbutton}</Button>}
+        
         {success &&
           <Snackbar open={success} autoHideDuration={6000} onClose={handleCloseSucces}>
             <Alert onClose={handleCloseSucces} severity="success">

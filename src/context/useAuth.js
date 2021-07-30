@@ -24,6 +24,9 @@ export default function useAuth() {
   }, []);  
 
   async function handleSignin(name, phone, password) {
+    if(!name || !phone || !password){
+      return true
+    }
     try{
       server.post('/user', {name: name, phone: phone, password: password})
       .then((res) => {
@@ -39,6 +42,9 @@ export default function useAuth() {
   }
 
   async function handleLogin(phone, password) {
+    if(!phone || !password){
+      return true
+    }
     try{
       const { data: { token } } = await server.put('/login', {phone: phone, password: password})
       localStorage.setItem('token', JSON.stringify(token));
