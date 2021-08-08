@@ -29,13 +29,15 @@ export default function useAuth() {
     }
     try{
       server.post('/user', {name: name, phone: phone, password: password})
+      return false
+     /*  handleLogin(phone, password)
       .then((res) => {
         handleLogin(phone, password)
       })
       .catch((err) => {
         if(err)
           return true
-      })
+      }) */
     }catch{
       return true
     }

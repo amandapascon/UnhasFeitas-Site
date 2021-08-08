@@ -1,6 +1,5 @@
 import React from 'react'
 import styles from 'styled-components'
-import { Link } from 'react-router-dom'
 
 const ButtonLink = styles.button`
     background: transparent;
@@ -22,9 +21,9 @@ const ButtonLink = styles.button`
     align-items: center;
 `
 
-export default function ButtonText(props){
+export default function ButtonTextClick(props){
     return(    
-        <ButtonLink as={Link} to={props.to} textcolor={props.textcolor} color={props.color}>
+        <ButtonLink onClick={props.onClick} textcolor={props.textcolor} color={props.color}>
             {props.children}
         </ButtonLink>       
     )

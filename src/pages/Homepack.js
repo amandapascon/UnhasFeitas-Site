@@ -5,12 +5,11 @@ import Snackbar from '@material-ui/core/Snackbar'
 
 import Header from '../components/Header'
 import Circle from '../components/Circle';
-import TextBold from '../components/TextBold';
 import Text from '../components/Text';
 import Button from '../components/Button'
-import ButtonText from '../components/ButtonText';
 import TabBar from '../components/TabBar';
 import SimpleDialog from '../components/SimpleDialog'
+import history from '../history';
 
 import { Context } from '../context/AuthContext';
 import { server } from '../api';
@@ -22,43 +21,66 @@ const Div = styles.div`
   flex-direction: column;
   justify-content: center;
 `
-const Icone = styles.div`
-    color: var(--black);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    font-family: 'Text Me One', sans-serif;
-    font-size: 12px;
-`
 
 export default function HomePack(){
   const { handleLogout, authenticated } = useContext(Context);
   const [loading, setLoading] = useState("")
 
   const [name, setName] = useState("")
-  const [pack, setPack] = useState("")
-  const [remaining, setRemaining] = useState("")
   const [statusUser, setStatusUser] = useState("")
 
   const [usage, setUsage] = useState(0)
   const [textbutton, setTextbutton] = useState("")
   const [text, setText] = useState("")
 
-  const [ err, setErr ] = useState(false)
-  const [ success, setSuccess ] = useState(false)
+  const [err, setErr] = useState(false)
+  const [errText, setErrText] = useState("")
+  const [success, setSuccess] = useState(false)
+  const [successText, setSuccessText] = useState("")
 
   const [open, setOpen] = useState(false)
   const [selectedValue, setSelectedValue] = useState("")
 
-  const handleClickOpen = () => {
+  const handlePacks = () => {
     setOpen(true);
   };
 
+  const handleCancelPacks = () => {
+    server
+    .patch('/payment')
+    .then((res)=> {
+      setSuccessText("Pagamento cancelado com sucesso")
+      setSuccess(true);
+    })
+    .catch((err) => {
+      if(err){
+        setErr(true)
+        setErrText("Erro ao cancelar pagamento!")
+      }
+    })
+  };
+  
   const handleClose = (value) => {
-    setOpen(false);
-    setSelectedValue(value);
+
+    setOpen(false)
+    
+    if(value){      
+      setSelectedValue(value._id)
+      const pack_id = value._id
+      server
+      .post(`/payment/package/${pack_id}`)
+      .then((res)=> {
+        setSuccessText("Pagamento solicitado com sucesso!")
+        setSuccess(true);
+      })
+      .catch((err) => {
+        if(err){
+          setErr(true)
+          setErrText("Erro ao solicitar novo pagamento!")
+        }
+      })
+    }
+
   };
 
   function Alert(props) {
@@ -73,31 +95,14 @@ export default function HomePack(){
     setSuccess(false);
   };
 
-  async function handleNewPay(){
-    console.log(pack)
-    /* server
-    .post('/payment/package/${pack}')
-    .then((res)=> {
-      setSuccess(true);
-    })
-    .catch((err) => {
-      if(err)
-        setErr(true)
-    }) */
-  }
-
   useEffect(() => {
-
     setLoading(true)
-
     if(authenticated){
       server
       .get('/user')
       .then((res) => {
 
         setName(res.data.name)
-        setPack(res.data.pack)
-        setRemaining(res.data.remainingPack)
         setStatusUser(res.data.status)
         
          //tela 1 - primeira vez
@@ -126,9 +131,7 @@ export default function HomePack(){
           setTextbutton("Iniciar novo pacote")
           setUsage(6)
         }
-
-        setLoading(false)
-        
+        setLoading(false)        
       })
       .catch((err) => {
         if(err)
@@ -137,18 +140,7 @@ export default function HomePack(){
 
     }else{
       handleLogout() 
-    }
-
-    if(selectedValue){
-      /* server
-        .get('/package')
-        .then((res)=> {
-          console.log(res.data)
-          setPacks(res.data)
-        }) */
-        console.log(selectedValue)
-    }
-
+    } 
   }, []);
   
   return(
@@ -161,29 +153,25 @@ export default function HomePack(){
         <br></br><br></br><br></br><br></br><br></br>
 
         {!loading && (statusUser==="using" || statusUser==="finished") && <Circle>{usage}/6</Circle>}
-        {!loading && (statusUser==="requested" || statusUser==="using" || statusUser==="finished") && <Text>{text}</Text>}
+        {!loading && statusUser!=="unused" && <Text>{text}</Text>}
         
-        {!loading && (statusUser==="unused" || statusUser==="finished") && <Button color='#f7d0b7' textcolor='#222222' onClick={handleClickOpen}>{textbutton}</Button>}
-        {!loading && statusUser==="requested" && <Button color='#f7d0b7' textcolor='#222222' >{textbutton}</Button>}
+        {!loading && (statusUser==="unused" || statusUser==="finished") && <Button color='#f7d0b7' textcolor='#222222' onClick={handlePacks}>{textbutton}</Button>}
+        {!loading && statusUser==="requested" && <Button color='#f7d0b7' textcolor='#222222' onClick={handleCancelPacks}>{textbutton}</Button>}
         
-        {success &&
-          <Snackbar open={success} autoHideDuration={6000} onClose={handleCloseSucces}>
-            <Alert onClose={handleCloseSucces} severity="success">
-              Pagamento solicitado com sucesso!
-            </Alert>
-          </Snackbar>
-        }
-
-        {err &&
-          <Snackbar open={err} autoHideDuration={6000} onClose={handleCloseErr}>
-            <Alert onClose={handleCloseErr} severity="error">
-              Erro ao solicitar novo pagamento!
-            </Alert>
-          </Snackbar>
-        }
-    
-      <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
-    
+        {/* Opções de Plano */}
+        <SimpleDialog selectedValue={selectedValue} open={open} onClose={handleClose} />
+        
+        <Snackbar open={success} autoHideDuration={6000} onClose={handleCloseSucces}>
+          <Alert onClose={handleCloseSucces} severity="success">
+            {successText}
+          </Alert>
+        </Snackbar>
+      
+        <Snackbar open={err} autoHideDuration={6000} onClose={handleCloseErr}>
+          <Alert onClose={handleCloseErr} severity="error">
+            {errText}
+          </Alert>
+        </Snackbar>
       </Div>      
       <TabBar/>
     </div>

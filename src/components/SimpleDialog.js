@@ -1,27 +1,20 @@
 import React, { useContext, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import Avatar from '@material-ui/core/Avatar'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import ListItemText from '@material-ui/core/ListItemText'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import Dialog from '@material-ui/core/Dialog'
-import PersonIcon from '@material-ui/icons/Person'
-import AddIcon from '@material-ui/icons/Add'
 import { Context } from '../context/AuthContext'
 import { server } from '../api'
 
 export default function SimpleDialog(props) {
     const { handleLogout, authenticated } = useContext(Context);
+    const { onClose, selectedValue, open } = props;
     
-    const [loading, setLoading] = useState("")
     const [packs, setPacks] = useState([])
 
-    useEffect(() => {
-
-        setLoading(true)
-    
+    useEffect(() => {    
         if(authenticated){  
           server
           .get('/package')
@@ -33,8 +26,6 @@ export default function SimpleDialog(props) {
         }
       }, []);
 
-    const { onClose, selectedValue, open } = props;
-  
     const handleClose = () => {
       onClose(selectedValue);
     };
@@ -48,13 +39,11 @@ export default function SimpleDialog(props) {
         <DialogTitle id="simple-dialog-title">Escolha seu Pacote: </DialogTitle>
         <List>
           {packs.map((pack) => (
-            <ListItem button onClick={() => handleListItemClick(pack)} key={pack.id}>
+            <ListItem key={pack._id} button onClick={() => handleListItemClick(pack)}>
               
-              <ListItemText primary={pack.name} />
+              <ListItemText key={pack._id} primary={pack.name} />
             </ListItem>
           ))}
-  
-          
         </List>
       </Dialog>
     );

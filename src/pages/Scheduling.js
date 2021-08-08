@@ -4,13 +4,18 @@ import styles from 'styled-components'
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown'
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 
+import Input from '@material-ui/core/Input';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+
 import Header from '../components/Header'
 import TextBold from '../components/TextBold'
 import Text from '../components/Text'
 import Button from '../components/Button'
 import TabBar from '../components/TabBar'
 import CheckboxLabel from '../components/CheckBoxLabel'
-import Select from '../components/Select'
 
 import { Context } from '../context/AuthContext'
 import { server } from '../api'
@@ -38,6 +43,7 @@ const ContainerNoBackgroung = styles.div`
     width: 70%;
     display: flex;
     flex-direction: column;
+    margin-bottom:20px;
 `
 
 const DivContainer = styles.div`
@@ -54,6 +60,15 @@ export default function Scheduling(){
 
     const [service, setService] = useState("")
     const [date, setDate] = useState("")
+    const [statusScheduling, setStatusScheduling] = useState("")
+    const [daySelected, setDaySelected] = React.useState("")
+
+    const [dates, setDates] = useState("")
+    
+    const handleChange = (event) => {
+      setDaySelected(event.target.value);
+      console.log(event.target.value)
+    };
 
     useEffect(() => {
         setLoading(true)    
@@ -63,6 +78,13 @@ export default function Scheduling(){
             .then((res) => {
                 setDate(res.data.date)
                 setService(res.data.services)
+                setStatusScheduling(res.data.status)
+            })
+
+            server
+            .get('/time')
+            .then((res) => {
+              setDates(res.data)
             })
         }else{
             handleLogout() 
@@ -86,7 +108,7 @@ export default function Scheduling(){
               </ContainerNoBackgroung>
             }
 
-            {!loading && service &&
+            {!loading && statusScheduling==="scheduled" &&
               <Container>
                 <DivContainer>
                   <TextBold>{service}</TextBold>
@@ -101,8 +123,24 @@ export default function Scheduling(){
                 <br></br><br></br><br></br>
                 <Button color='#f7d0b7' textcolor='#222222'>Cancelar</Button>
               </Container> 
+
+              
               
             }
+
+              { dates &&
+                <FormControl style={{width: '70%'}}>
+                  <InputLabel >Escolha o dia do Atendimento</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={daySelected}
+                    onChange={handleChange}
+                  >
+                    {dates.map(d=><MenuItem key={d._id}>{dateFormat(d.date, "dd'/'mm'/'yyyy")}</MenuItem>)}
+                  </Select>
+                </FormControl>
+              }
 
             <br></br><br></br>{/* 
             <Select>Escolha um horário:</Select>

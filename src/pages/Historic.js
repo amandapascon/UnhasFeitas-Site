@@ -2,15 +2,11 @@ import React, { useContext, useState, useEffect } from 'react';
 import styles from 'styled-components'
 
 import HistoryIcon from '@material-ui/icons/History'
-import CheckIcon from '@material-ui/icons/Check';
 
 import Header from '../components/Header'
 import TextBold from '../components/TextBold'
 import Text from '../components/Text'
-import Button from '../components/Button'
 import TabBar from '../components/TabBar'
-import Label from '../components/Label';
-import LabelReady from '../components/LabelReady'
 
 import { Context } from '../context/AuthContext'
 import { server } from '../api'
@@ -23,14 +19,26 @@ const Div = styles.div`
     padding-top: 150px;
 `
 
-const HistoricContainer = styles.div`
-    display: flex;
-    flex-direction: column;
-`
 const Container = styles.div`
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; 
+    width: 100%;
 `
+
+const ContainerInline = styles.div`
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center; 
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.6);
+    background: var(--white);
+    height: 50px;
+    width: 90%;
+    margin-top:20px;
+`
+
 const P = styles.p`
     font-size: 15px;
     font-family: 'Text Me One', sans-serif;
@@ -38,18 +46,18 @@ const P = styles.p`
 
     display: flex;
     flex-direction: row;
+    justify-content: space-around;
     align-items: center;
-    margin-top: 40px;
 `
 
 
 export default function Historic(){
     const { handleLogout, authenticated } = useContext(Context);
+
     const [loading, setLoading] = useState("")
 
-    const [usages, setUsage] = useState([])
-    const [dates, setDate] = useState([])
-    const [length, setLength] = useState("")
+    const [ schedulings, setSchedulings ] = useState("")
+    const [statusUser, setStatusUser] = useState("")
 
     useEffect(() => {
         setLoading(true)    
@@ -57,12 +65,15 @@ export default function Historic(){
             server
             .get('/user')
             .then((res) => {
-                setUsage(res.data.usageHistory)
-                setDate(res.data.dateHistory)
-                if(!res.data.dateHistory.length)
-                    setLength(false)
-                else
-                    setLength(true)
+                setStatusUser(res.data.status)
+                console.log(res.data.status)
+            })
+
+            server
+            .get('/historic')
+            .then((res) => {
+                setSchedulings(res.data)
+                console.log(res.data)
             })
         }else{
             handleLogout() 
@@ -78,19 +89,27 @@ export default function Historic(){
 
             <br></br><br></br><br></br><br></br>
 
-            {!loading && length &&            
+            { !loading && schedulings &&
             <Container>
-                <HistoricContainer>
-                    {dates.map(date=><P key={date}><HistoryIcon/>&nbsp;&nbsp;{dateFormat(date, "dd'/'mm'/'yyyy")}</P>)}
-                </HistoricContainer>
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <HistoricContainer>
-                    {usages.map(usage=><P key={usage}>{usage}&nbsp;&nbsp;&nbsp;&nbsp;<CheckIcon/></P>)}  
-                </HistoricContainer>
-            </Container>
+                {schedulings.map(scheduling=>  
+                <>                  
+                    {
+                        scheduling.status==="confirmed" &&
+                        <ContainerInline>
+                            <P>
+                                <HistoryIcon/>
+                                &nbsp;&nbsp;
+                                <TextBold>{scheduling.services}</TextBold>
+                            </P>
+                            <P>{dateFormat(scheduling.date, "dd'/'mm'/'yyyy")}</P>
+                        </ContainerInline>
+                    }
+                </>
+                )}
+            </Container> 
             }
 
-            {!loading && !length && <center><Text>A SITUAÇÃO DO SEU PACOTE NÃO PERMITE VISUALIZAÇÃO DO HISTÓRICO</Text></center>}
+            {!loading && (statusUser!=="using" && statusUser!=="finished") && <center><Text>A SITUAÇÃO DO SEU PACOTE NÃO PERMITE VISUALIZAÇÃO DO HISTÓRICO</Text></center>}
 
         </Div>      
         <TabBar/>

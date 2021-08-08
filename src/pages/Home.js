@@ -43,8 +43,7 @@ export default function Home() {
   useEffect(() => {
     if(authenticated){
         history.push('/homePack');
-    }
-        
+    }        
   }, []);
 
   return(
@@ -69,7 +68,7 @@ export default function Home() {
             </Alert>
           </Snackbar>
         }
-        
+
         <br></br>
         </Div>      
         <Footer/>

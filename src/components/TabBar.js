@@ -1,7 +1,8 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import styles from 'styled-components'
 
-import Button from './ButtonText'
+import ButtonCliclk from './ButtonTextClick'
+import Button from './ButtonText';
 import { Link } from 'react-router-dom'
 import { Context } from '../context/AuthContext'
 
@@ -49,7 +50,7 @@ export default function TabBar(){
             <Button textcolor='#000' as={Link} to='/scheduling'><Icone><TodayIcon/>Agendar</Icone></Button>
             <Button textcolor='#000' as={Link} to='/historic'><Icone><HistoryIcon/>Histórico</Icone></Button>
             <Button textcolor='#000' as={Link} to='/myaccount'><Icone><PersonIcon/>Perfil</Icone></Button>
-            <Button textcolor='#000' onClick={handleLogout}><Icone><ExitToAppIcon/>Sair</Icone></Button>
+            <ButtonCliclk textcolor='#000' onClick={handleLogout}><Icone><ExitToAppIcon/>Sair</Icone></ButtonCliclk>
         </Tabbar>
     )
 }

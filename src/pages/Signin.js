@@ -20,12 +20,14 @@ const Div = styles.div`
 `
 
 export default function Signin(){
-  const { authenticated, handleSignin } = useContext(Context);
+  const { authenticated, handleSignin, handleLogin } = useContext(Context);
 
   const [ name, setName ] = useState('')
   const [ phone, setPhone ] = useState('')
   const [ password, setPassword ] = useState('')
+
   const [ err, setErr ] = useState(false)
+  const [ success, setSuccess ] = useState(false)
 
   function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -35,6 +37,10 @@ export default function Signin(){
     setErr(false);
   };
 
+  const handleCloseSucces = (event) => {
+    setSuccess(false);
+  };
+
   useEffect(() => {    
     if(authenticated){
         history.push('/homePack');
@@ -42,13 +48,19 @@ export default function Signin(){
   }, []);
 
   async function handlesignin() {
-    if (handleSignin(name, phone, password))
+    if (await handleSignin(name, phone, password))
       setErr(true)
+    else
+      setSuccess(true)    
+
+    setName("")
+    setPhone("")
+    setPassword("")
   }
 
   return(
     <div>
-      <Div>        
+      <Div>
         <Title>Unhas Feitas</Title>
 
         <Label label="Nome" value={name} onChange={event => setName(event.target.value)}></Label>
@@ -62,13 +74,17 @@ export default function Signin(){
         <br></br>
         <Text textcolor='#545454'>Já possui cadastro? <ButtonText  textcolor='#e87b63' as={Link} to='/'>Entrar</ButtonText></Text>
 
-        {err &&
-          <Snackbar open={err} autoHideDuration={6000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity="error">
-              Erro ao cadastrar!
-            </Alert>
-          </Snackbar>
-        }
+        <Snackbar open={err} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error">
+            Erro ao cadastrar!
+          </Alert>
+        </Snackbar>
+
+        <Snackbar open={success} autoHideDuration={6000} onClose={handleCloseSucces}>
+          <Alert onClose={handleCloseSucces} severity="success">
+            Cadastro realizado com sucesso!
+          </Alert>
+        </Snackbar>
           
       </Div>      
       <Footer/>
