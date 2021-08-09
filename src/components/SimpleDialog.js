@@ -10,8 +10,7 @@ import { server } from '../api'
 
 export default function SimpleDialog(props) {
     const { handleLogout, authenticated } = useContext(Context);
-    const { onClose, selectedValue, open } = props;
-    
+    const { onClose, selectedValue, open } = props;    
     const [packs, setPacks] = useState([])
 
     useEffect(() => {    

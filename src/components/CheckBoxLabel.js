@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 import { withStyles } from "@material-ui/core/styles";
 import { grey } from "@material-ui/core/colors";
 import FormGroup from "@material-ui/core/FormGroup";
@@ -25,10 +25,11 @@ const GreyCheckBox = withStyles({
 })((props) => <Checkbox color="default" {...props} />);
 
 export default function CheckboxLabel(props) {
-    const [state, setState] = React.useState({ checked: false });
+    const [state, setState] = useState({ checked: false });
   
     const handleChange = (event) => {
       setState({ ...state, [event.target.name]: event.target.checked });
+      console.log(event.value)
     };
 
     return(

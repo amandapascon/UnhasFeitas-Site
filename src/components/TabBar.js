@@ -14,7 +14,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 
 const Tabbar = styles.div`
     background-color : var(--white);
-    height: 70px;
+    height: 10vh;
     width: 100%;
     display: flex;
     flex-direction: row;
