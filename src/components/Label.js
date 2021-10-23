@@ -30,7 +30,7 @@ export default function Label(props) {
       <>
       {props.type === "password" 
       ? <TextFieldGray onChange={props.onChange} id={props.id} label={props.label} value={props.value} type="password" ></TextFieldGray> 
-      : <TextFieldGray onChange={props.onChange} id={props.id} label={props.label} value={props.value} ></TextFieldGray>}        
+      : <TextFieldGray onChange={props.onChange} id={props.id} label={props.label} value={props.value} type={props.type} ></TextFieldGray>}        
       </>
         
     )

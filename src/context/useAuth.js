@@ -3,25 +3,29 @@ import { isExpired } from "react-jwt";
 
 import { server } from '../api/index'
 import history from '../history';
+import jwt_decode from "jwt-decode"
 
 export default function useAuth() {
   const [authenticated, setAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true)
+  const [admin, setAdmin] = useState(false)
   
   useEffect(() => {
     const token = localStorage.getItem('token');
-    
     if(token){
       if(isExpired(token)){
         setLoading(false);
         handleLogout()
       }
-      server.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`;
-      setAuthenticated(true);
+      server.defaults.headers.Authorization = `Bearer ${JSON.parse(token)}`
+      const decoded = jwt_decode(localStorage.getItem('token'))
+      setAuthenticated(true)
+      console.log("role: "+decoded.role);
+      if(decoded.role === "true")
+        setAdmin(true)
     }
-
-    setLoading(false);
-  }, []);  
+    setLoading(false)
+  }, []);
 
   async function handleSignin(name, phone, password) {
     if(!name || !phone || !password){
@@ -30,14 +34,6 @@ export default function useAuth() {
     try{
       server.post('/user', {name: name, phone: phone, password: password})
       return false
-     /*  handleLogin(phone, password)
-      .then((res) => {
-        handleLogin(phone, password)
-      })
-      .catch((err) => {
-        if(err)
-          return true
-      }) */
     }catch{
       return true
     }
@@ -50,9 +46,15 @@ export default function useAuth() {
     try{
       const { data: { token } } = await server.put('/login', {phone: phone, password: password})
       localStorage.setItem('token', JSON.stringify(token));
-      server.defaults.headers.Authorization = `Bearer ${token}`;
+      server.defaults.headers.Authorization = `Bearer ${token}`
       setAuthenticated(true);
-      history.push('/homePack');
+      const decoded = jwt_decode(token)
+      if(decoded.role === "true"){
+        setAdmin(true)
+        history.push('/homeAdmin') 
+      }               
+      else
+        history.push('/homePack')
     }catch{
       return true
     }
@@ -65,6 +67,6 @@ export default function useAuth() {
     history.push('/');
   }
   
-  return { authenticated, loading, handleLogin, handleLogout, handleSignin };
+  return { authenticated, admin, loading, handleLogin, handleLogout, handleSignin };
 }
 

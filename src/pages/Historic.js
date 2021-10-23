@@ -29,6 +29,7 @@ const ContainerInline = styles.div`
     align-items: center; 
     box-shadow: 0px 2px 5px rgba(0,0,0,0.6);
     background: var(--white);
+    border-radius: 10px;
     height: 50px;
     width: 90%;
     margin-top:20px;
@@ -57,7 +58,6 @@ export default function Historic(){
         .get('/user')
         .then((res) => {
           setStatusUser(res.data.status)
-          console.log(res.data.status)
         })
 
         server

@@ -21,7 +21,7 @@ const Div = styles.div`
 `
 
 export default function Home() {
-  const { handleLogin, authenticated} = useContext(Context);
+  const { handleLogin, authenticated, admin } = useContext(Context);
 
   const [ phone, setPhone ] = useState('')
   const [ password, setPassword ] = useState('')
@@ -42,7 +42,7 @@ export default function Home() {
 
   useEffect(() => {
     if(authenticated){
-        history.push('/homePack');
+      history.push('/homePack');
     }        
   }, []);
 

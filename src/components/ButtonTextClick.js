@@ -23,7 +23,7 @@ const ButtonLink = styles.button`
 
 export default function ButtonTextClick(props){
     return(    
-        <ButtonLink onClick={props.onClick} textcolor={props.textcolor} color={props.color}>
+        <ButtonLink id={props.id} onClick={props.onClick} textcolor={props.textcolor} color={props.color}>
             {props.children}
         </ButtonLink>       
     )

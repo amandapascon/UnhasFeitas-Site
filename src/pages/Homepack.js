@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react'
 import styles from 'styled-components'
 import MuiAlert from '@material-ui/lab/Alert'
 import Snackbar from '@material-ui/core/Snackbar'
@@ -8,7 +8,8 @@ import Text from '../components/Text';
 import Button from '../components/Button'
 import TabBar from '../components/TabBar';
 import SimpleDialog from '../components/SimpleDialog'
-import { Context } from '../context/AuthContext';
+import history from '../history'
+import { Context } from '../context/AuthContext'
 import { server } from '../api';
 
 const Div = styles.div`
@@ -20,7 +21,7 @@ const Div = styles.div`
 `
 
 export default function HomePack(){
-  const { handleLogout, authenticated } = useContext(Context);
+  const { handleLogout, authenticated, admin } = useContext(Context);
 
   const [loading, setLoading] = useState("")
   const [name, setName] = useState("")
@@ -35,11 +36,11 @@ export default function HomePack(){
   const [errText, setErrText] = useState("")
   const [success, setSuccess] = useState(false)
   const [successText, setSuccessText] = useState("")
-  
+
   /* abrir pop up de pacotes disponíveis */
   const handlePacks = () => {
     setOpen(true);
-  };
+  }
 
   /* solicitar cancelamento de pacote */
   const handleCancelPacks = () => {
@@ -92,6 +93,10 @@ export default function HomePack(){
   };
 
   useEffect(() => {
+    if(admin){
+      history.push('/homeAdmin') 
+    }
+
     setLoading(true)
     if(authenticated){
       server
